@@ -1,0 +1,13 @@
+Source: honeysens-sensor
+Section: net
+Priority: optional
+Maintainer: Pascal Brueckner <pascal.brueckner@tu-dresden.de>
+Build-Depends: debhelper (>= 9), libglib2.0-dev, libssl-dev, libcurl4-openssl-dev, libreadline-dev, libsqlite3-dev, python-dev, libtool, automake, subversion, git, flex, bison, libemu-dev, libnl-3-dev, libnl-genl-3-dev, libnl-nf-3-dev, libev-dev, cython3, libudns-dev, libpcap-dev, libpython-dev
+Standards-Version: 3.9.5
+
+Package: honeysens-sensor
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, python-twisted, python-pycryptopp, libglib2.0-bin, libssl1.0.0, libemu2, libnl-3-200, libnl-genl-3-200, libnl-nf-3-200, libev4, cython3, libudns0, libpcap0.8, python-requests, python3-requests, iptables, cron, adduser, python-netifaces, tcpdump, python-scapy, python-crypto, python3-crypto, macchanger, resolvconf, python-dnspython, python-pycurl, python3-pycurl, python-dbus, docker.io, python-docker, python-zmq, python-colorama
+Description: scripts for running a HoneySens sensor
+ This package contains all the software that is required to
+ run a HoneySens sensor.

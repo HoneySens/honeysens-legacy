@@ -1,0 +1,5 @@
+update.py opt/honeysens
+bbb-ssh.sh opt/honeysens
+led_alert.sh opt/honeysens
+led_normal.sh opt/honeysens
+honeysens-sensor-platform-bbb-sshd.service lib/systemd/system

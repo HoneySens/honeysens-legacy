@@ -1,0 +1,70 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          honeysens-sensor-platform-bbb
+# Required-Start:    $local_fs $syslog
+# Required-Stop:     $local_fs $syslog
+# X-Start-Before:    generic-board-startup honeysens-sensor
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: HoneySens sensor services for the BeagleBone Black platform
+# Description:       Provides additional services specific to the BeagleBone Black
+### END INIT INFO
+
+# Author: Pascal Brückner
+
+# Do NOT "set -e"
+
+print_usage() {
+    echo "Usage: honeysens-sensor-platform-bbb {start}"
+}
+
+# Mounts the eMMC boot partition
+mount_boot_partition() {
+    echo "Mounting boot partition to /boot/uboot"
+    mount /dev/mmcblk1p1 /boot/uboot
+}
+
+# Will be executed after each flash procedure.
+# Makes the SD card unbootable and restarts the board.
+test_for_flasher() {
+    unset are_we_flasher
+    are_we_flasher=$(grep init-eMMC-flasher /proc/cmdline || true)
+    if [ ! "x${are_we_flasher}" = "x" ]; then
+        echo "Flasher detected, making SD card unbootable and restarting system"
+        mount /dev/mmcblk0p2 /mnt
+        mv /mnt/boot/uEnv.txt /mnt/boot/uEnv.txt.orig
+        umount /mnt
+        systemctl reboot || reboot
+        exit
+    fi
+}
+
+# Searches for a sensor configuration archive on the boot partition and triggers the reconfiguration process if one is found.
+test_for_config() {
+    find /boot/uboot -type f -iname "s*.tar.gz" -print0 | while IFS= read -r -d $'\0' line; do
+        echo "Sensor configuration archive found on boot partition, invoking configuration script"
+        /usr/bin/python /opt/honeysens/config_sensor.py "$line"
+        rm -v "$line"
+        /usr/bin/python /opt/honeysens/poll.py /opt/honeysens/honeysens.cfg
+        break
+    done
+}
+
+# USB auto suspend led to certain problems when providing network services, so we disable it
+disable_usb_autosuspend() {
+    echo -1 > /sys/devices/ocp.3/47400000.usb/musb-hdrc.1.auto/usb1/power/autosuspend
+    echo -1 > /sys/devices/ocp.3/47400000.usb/musb-hdrc.0.auto/usb2/power/autosuspend
+}
+
+case "$1" in
+start)
+    disable_usb_autosuspend
+    mount_boot_partition
+    test_for_flasher
+    test_for_config
+	;;
+*)
+    print_usage
+    ;;
+esac
+exit 0

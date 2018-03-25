@@ -1,0 +1,11 @@
+[Unit]
+Description=BBB SSHD service
+Requires=generic-board-startup.service
+After=generic-board-startup.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/honeysens/bbb-ssh.sh
+
+[Install]
+WantedBy=multi-user.target

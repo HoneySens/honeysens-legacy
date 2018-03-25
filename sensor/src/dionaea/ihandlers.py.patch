@@ -1,0 +1,13 @@
+--- opt/dionaea/lib/dionaea/python/dionaea/ihandlers.py	2015-08-19 16:48:08.000000000 +0200
++++ opt/dionaea/lib/dionaea/python/dionaea/ihandlers.py	2015-08-20 12:24:27.800144347 +0200
+@@ -143,6 +143,10 @@
+         import dionaea.fail2ban
+         g_handlers.append(dionaea.fail2ban.fail2banhandler())
+ 
++    if "honeysens" in g_dionaea.config()['modules']['python']['ihandlers']['handlers']:
++        import dionaea.honeysens
++        g_handlers.append(dionaea.honeysens.handler('*'))
++
+ def stop():
+     global g_handlers
+     for i in g_handlers:

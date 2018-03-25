@@ -1,0 +1,100 @@
+--- opt/dionaea/etc/dionaea/dionaea.conf	2015-10-12 14:25:19.576824901 +0200
++++ opt/dionaea/etc/dionaea/dionaea.conf	2015-10-12 14:58:52.820920944 +0200
+@@ -2,14 +2,7 @@
+ 	default = {
+ 		// file not starting with / is taken relative to LOCALESTATEDIR (e.g. /opt/dionaea/var)
+ 		file = "log/dionaea.log"
+-		levels = "all"
+-		domains = "*"
+-    }
+-
+-	errors = {
+-		// file not starting with / is taken relative to LOCALESTATEDIR (e.g. /opt/dionaea/var)
+-		file = "log/dionaea-errors.log"
+-		levels = "warning,error"
++		levels = "error"
+ 		domains = "*"
+ 	}
+ }
+@@ -169,8 +162,8 @@
+ 		 at runtime, and start/stop services dynamically per address per interface
+ 	*/
+ 	     
+-	mode = "getifaddrs"
+-	addrs = { eth0 = ["::"] }
++	mode = "manual"
++	addrs = { eth0 = ["0.0.0.0"] }
+ }
+ 
+ modules = {
+@@ -185,31 +178,14 @@
+ 		profile = "1"
+ 	}
+ 
++	/*
+ 	pcap = 
+ 	{
+-		/** 
+-       	 * libpcap 1.0.0 
+-       	 *  
+-       	 * "Arithmetic expression against transport layer headers, like 
+-       	 * tcp[0], does not work  against  IPv6  packets. It  only looks 
+-       	 * at IPv4 packets."
+-       	 * 
+-       	 * As a consequence, the default filter can not match 
+-       	 * ipv6 tcp rst packets.
+-       	 * 
+-       	 * If you want to go for rejected ipv6, remove the tcp matching part of the filter
+-       	 * The code is capable to checking the tcp-rst flag and seq number itself, but 
+-       	 * matching every packet in userspace is expensive.
+-       	 * Therefore you'll have to hack the code if you want to track ipv6 rejected connections
+-       	 * 
+-		 * Format is IFACE = { addrs = MODE }
+-		 * currently mode is ignored
+-       	 */
+-
+ 		any = {
+ 			addrs = "auto"
+ 		}
+ 	}
++	*/
+ 
+ 	nfq =
+ 	{ 
+@@ -360,6 +336,9 @@
+ 				dynip_resolve = "http://hpfriends.honeycloud.net/ip"
+ 			}
+ 		}
++		honeysens = {
++			config = "/opt/honeysens/honeysens.cfg"
++		}
+ 		logsql = {
+ 			mode = "sqlite" // so far there is only sqlite
+ 			sqlite = {
+@@ -471,21 +450,22 @@
+ 
+ 		ihandlers = {
+ 			handlers = ["ftpdownload", "tftpdownload", "emuprofile", "cmdshell", "store", "uniquedownload", 
+-			"logsql",
++//			"logsql",
+ //			"virustotal",
+ //			"mwserv",
+ //			"submit_http",
+-			"hpfeeds",
++//			"hpfeeds",
+ //			"logxmpp",
+ //			"nfq",
+ //			"p0f",
+ //			"surfids",
+-//			"fail2ban"
++//			"fail2ban",
++			"honeysens"
+ 			]
+ 		}
+ 
+ 		services = {
+-			serve = ["http", "https", "tftp", "ftp", "mirror", "smb", "epmap", "sip","mssql", "mysql"]
++			serve = ["smb", "epmap"]
+ 		}
+ 
+ 	}

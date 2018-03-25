@@ -1,0 +1,145 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          honeysens-sensor
+# Required-Start:    $remote_fs $syslog networking
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: HoneySens sensor services
+# Description:       Controls the runtime status of all HoneySens sensor services
+### END INIT INFO
+
+# Author: Pascal Brückner
+
+# Do NOT "set -e"
+
+RECON_PIDFILE=/var/run/honeysens_recon.pid
+RECON_DAEMON=/opt/honeysens/recon.py
+KIPPO_PIDFILE=/opt/kippo/kippo.pid
+KIPPO_DAEMON=/opt/kippo/start.sh
+DIONAEA_PIDFILE=/var/run/dionaea.pid
+DIONAEA_DAEMON=/opt/dionaea/bin/dionaea
+DIONAEA_DAEMON_ARGS="-D -p $DIONAEA_PIDFILE"
+IPTABLES="/sbin/iptables"
+
+print_usage() {
+    echo "Usage: honeysens-sensor [recon|kippo|dionaea] {start|stop}"
+}
+
+config_sensor() {
+    if [ -f "/opt/honeysens/config_sensor.sh" ] ; then
+        /usr/bin/python /opt/honeysens/config_sensor.py /opt/honeysens/newconfig
+        exit 0
+    fi
+}
+
+start_recon() {
+    /sbin/start-stop-daemon --start --background --quiet --pidfile $RECON_PIDFILE --make-pidfile --startas $RECON_DAEMON
+}
+
+stop_recon() {
+    /sbin/start-stop-daemon --stop --quiet --pidfile $RECON_PIDFILE --retry=TERM/30/KILL/5
+}
+
+start_kippo() {
+    # Return
+	#   0 if daemon has been started
+	#   1 if daemon was already running
+	#   2 if daemon could not be started
+	/sbin/start-stop-daemon --start --quiet --pidfile $KIPPO_PIDFILE --exec $KIPPO_DAEMON --user kippo --test > /dev/null || return 1
+	/sbin/start-stop-daemon --start --quiet --pidfile $KIPPO_PIDFILE --exec /usr/bin/python --chdir /opt/kippo --chuid kippo:kippo --startas $KIPPO_DAEMON || return 2
+}
+
+stop_kippo() {
+  	# Return
+	#   0 if daemon has been stopped
+	#   1 if daemon was already stopped
+	#   2 if daemon could not be stopped
+	#   other if a failure occurred
+	/sbin/start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $KIPPO_PIDFILE --user kippo --exec /usr/bin/python
+	RETVAL="$?"
+	[ "$RETVAL" = 2 ] && return 2
+	/sbin/start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --user kippo --exec /usr/bin/python
+	[ "$?" = 2 ] && return 2
+	rm -f $KIPPO_PIDFILE
+	return "$RETVAL"
+}
+
+start_dionaea() {
+    /sbin/start-stop-daemon --start --quiet --pidfile $DIONAEA_PIDFILE --exec $DIONAEA_DAEMON --test > /dev/null || return 1
+    /sbin/start-stop-daemon --start --quiet --pidfile $DIONAEA_PIDFILE --exec $DIONAEA_DAEMON -- $DIONAEA_DAEMON_ARGS || return 2
+}
+
+stop_dionaea() {
+	# Return
+	#   0 if daemon has been stopped
+	#   1 if daemon was already stopped
+	#   2 if daemon could not be stopped
+	#   other if a failure occurred
+	/sbin/start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $DIONAEA_PIDFILE --name dionaea
+	RETVAL="$?"
+	/sbin/start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DIONAEA_DAEMON
+    [ "$?" = 2 ] && return 2
+    rm -f $DIONAEA_PIDFILE
+	return "$RETVAL"
+}
+
+case "$1" in
+start)
+	if [ -f /opt/honeysens/newconfig ]; then
+	    config_sensor
+		exit 1
+	fi
+	if [ -f /opt/honeysens/honeysens.cfg ]; then
+            /opt/honeysens/poll.py /opt/honeysens/honeysens.cfg
+	fi
+	;;
+stop)
+    exit 0
+    ;;
+recon)
+    case "$2" in
+    start)
+        start_recon
+        ;;
+    stop)
+        stop_recon
+        ;;
+    *)
+        print_usage
+        ;;
+    esac
+    ;;
+kippo)
+    case "$2" in
+    start)
+        $IPTABLES -A PREROUTING -t nat -i eth0 -p tcp --dport 22 -j REDIRECT --to-port 2222
+        start_kippo
+        ;;
+    stop)
+        stop_kippo
+        $IPTABLES -D PREROUTING -t nat -i eth0 -p tcp --dport 22 -j REDIRECT --to-port 2222
+        ;;
+    *)
+        print_usage
+        ;;
+    esac
+    ;;
+dionaea)
+    case "$2" in
+    start)
+        start_dionaea
+        ;;
+    stop)
+        stop_dionaea
+        ;;
+    *)
+        print_usage
+        ;;
+    esac
+    ;;
+*)
+    print_usage
+    ;;
+esac
+exit 0

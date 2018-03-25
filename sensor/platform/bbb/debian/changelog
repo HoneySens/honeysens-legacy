@@ -1,0 +1,54 @@
+honeysens-sensor-platform-bbb (0.2.3) unstable; urgency=medium
+
+  * Version bump to match honeysens-sensor
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Wed, 01 Mar 2017 16:20:18 +0100
+
+honeysens-sensor-platform-bbb (0.2.2) unstable; urgency=medium
+
+  * SSH honeypot made more responsive to connection attempts
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Fri, 04 Nov 2016 16:24:49 +0100
+
+honeysens-sensor-platform-bbb (0.1.7) unstable; urgency=medium
+
+  * Version bump to match honeysens-sensor
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Mon, 21 Mar 2016 12:34:38 +0100
+
+honeysens-sensor-platform-bbb (0.1.6) unstable; urgency=medium
+
+  * python-requests replaced by pycurl for more flexible proxy auth support
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Tue, 01 Mar 2016 12:23:51 +0100
+
+honeysens-sensor-platform-bbb (0.1.5) unstable; urgency=medium
+
+  * Update proxy support added
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Wed, 27 Jan 2016 12:43:26 +0100
+
+honeysens-sensor-platform-bbb (0.1.4) unstable; urgency=medium
+
+  * Version bump to match honeysens-sensor
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Mon, 25 Jan 2016 18:49:59 +0100
+
+honeysens-sensor-platform-bbb (0.1.3) unstable; urgency=medium
+
+  * Version bump to match honeysens-sensor
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Mon, 18 Jan 2016 15:46:09 +0100
+
+honeysens-sensor-platform-bbb (0.1.1) unstable; urgency=medium
+
+  * The SSH server now properly starts and listens on the USB ethernet gadget only
+  * After a sensor has been configured, it will immediately start the polling procedure
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Mon, 07 Dec 2015 18:23:48 +0100
+
+honeysens-sensor-platform-bbb (0.1.0) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Sat, 05 Dec 2015 23:00:00 +0100

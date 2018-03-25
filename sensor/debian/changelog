@@ -1,0 +1,73 @@
+honeysens-sensor (0.2.3) unstable; urgency=medium
+
+  * Support for event indication LEDs on the BeagleBone Black platform added
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Wed, 01 Mar 2017 16:16:05 +0100
+
+honeysens-sensor (0.2.2) unstable; urgency=medium
+
+  * Version bump to match honeysens-sensor-platform-bbb
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Fri, 04 Nov 2016 16:26:43 +0100
+
+honeysens-sensor (0.2.0) unstable; urgency=medium
+
+  * kippo honeypot replaced with cowrie
+  * Support for plain-text HTTP removed
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Sun, 31 Jul 2016 17:33:23 +0200
+
+honeysens-sensor (0.1.7) unstable; urgency=medium
+
+  * Improved proxy authentication discovery (brute-force if curl autodiscovery fails)
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Mon, 21 Mar 2016 12:32:39 +0100
+
+honeysens-sensor (0.1.6) unstable; urgency=medium
+
+  * Proxy authentication support: Basic, Digest and NTLM (using autodiscovery)
+  * python-requests replaced by pycurl
+  * Time sync doesn't depend on htpdate anymore and can be performed via HTTPS
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Tue, 01 Mar 2016 12:13:07 +0100
+
+honeysens-sensor (0.1.5) unstable; urgency=medium
+
+  * HTTP(S) proxy basic authentication support
+  * Recon mode bug fixed, which caused valid DNS responses to be classified as events
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Wed, 10 Feb 2016 11:03:12 +0100
+
+honeysens-sensor (0.1.4) unstable; urgency=medium
+
+  * Proxy-related htpdate bug fixed
+  * Recon mode bug fixed (crash on missing UDP payloads)
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Mon, 25 Jan 2016 18:45:17 +0100
+
+honeysens-sensor (0.1.3) unstable; urgency=medium
+
+  * Gateway + DNS support
+  * Various bugs fixed
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Mon, 18 Jan 2016 15:44:10 +0100
+
+honeysens-sensor (0.1.2) unstable; urgency=medium
+
+  * HTTP(S) Proxy support
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Wed, 16 Dec 2015 10:42:05 +0100
+
+honeysens-sensor (0.1.1) unstable; urgency=medium
+
+  * The network is now only reset when the network configuration actually changes
+  * Fixed a memory leak in the recon service
+  * Introduced update feedback and additional checks to ensure only one polling process runs at the same time
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Mon, 07 Dec 2015 18:20:34 +0100
+
+honeysens-sensor (0.1.0) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Sat, 05 Dec 2015 23:13:00 +0100

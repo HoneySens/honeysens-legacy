@@ -1,0 +1,6 @@
+The Debian Package honeysens-sensor
+-----------------------------------
+
+This package provides the basic sensor scripts and applications, including the open source honeypots kippo and dionaea.
+
+ -- Pascal Brueckner <pascal.brueckner@tu-dresden.de>  Sat, 05 Dec 2015 23:00:00 +0200
